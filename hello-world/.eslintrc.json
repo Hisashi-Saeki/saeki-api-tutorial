@@ -20,12 +20,12 @@
        {
          "groups": ["builtin", "external", ["parent", "sibling", "index", "object"], "type"],
          "pathGroups": [
-					{
-						"pattern": "express",
-						"group": "external",
-						"position": "before"
-					}
-				 ],
+          {
+            "pattern": "express",
+            "group": "external",
+            "position": "before"
+          }
+         ],
            "pathGroupsExcludedImportTypes": ["builtin"],
             "alphabetize": {
             "order": "asc",
