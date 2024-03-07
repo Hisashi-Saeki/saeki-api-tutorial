@@ -1,0 +1,209 @@
+openapi: 3.0.0
+x-stoplight:
+  id: shyvbdru80a8i
+info:
+  title: tutorial-api
+  version: '1.0'
+  description: backend tutorial
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /contents:
+    get:
+      summary: Get Contents
+      operationId: get-Contents
+      tags:
+        - Content
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Content'
+          headers: {}
+      x-stoplight:
+        id: jaxhnr1gv9qxs
+      x-internal: true
+      description: コンテンツ一覧の取得
+      parameters: []
+    post:
+      summary: Create New Content
+      operationId: post-content
+      responses:
+        '201':
+          description: Content Created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PostContentRequest'
+              examples: {}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostContentRequest'
+            examples: {}
+      x-stoplight:
+        id: r1wwt8ur8axks
+      x-internal: true
+      description: Post the necessary fields for the API to create a new content.
+    description: コンテンツの作成
+    parameters: []
+  '/contents/{id}':
+    parameters:
+      - schema:
+          type: number
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Get Content Info by Content ID
+      operationId: get-contents-contentsId
+      tags:
+        - Content
+      responses:
+        '200':
+          description: Content Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Content'
+              examples:
+                Example 1:
+                  value:
+                    id: 3
+                    title: Hello Title
+                    body: Hello Body
+                    createDate: '2019-08-24'
+                    updateDate: '2019-08-24'
+          headers: {}
+      x-stoplight:
+        id: nnavtavn82qnu
+      x-internal: true
+      description: コンテンツの取得
+    put:
+      summary: Update a Content
+      operationId: put-contents-contentId
+      tags:
+        - Content
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Content'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateContentRequest'
+      x-stoplight:
+        id: gpzpzxftidc24
+      x-internal: true
+      description: コンテンツの更新
+    delete:
+      summary: Delete a Content by Content ID
+      operationId: delete-contents-contentId
+      tags:
+        - Content
+      responses:
+        '204':
+          description: No Content
+      x-stoplight:
+        id: djs9gmof7n97r
+      description: コンテンツの削除
+      x-internal: true
+components:
+  schemas:
+    Content:
+      title: Content
+      type: object
+      x-examples: {}
+      x-stoplight:
+        id: l68i6i5ij90u2
+      x-internal: true
+      required:
+        - id
+        - title
+        - body
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the given content.
+          x-stoplight:
+            id: 0n9dbuncumt4n
+          example: 1
+        title:
+          type: string
+          x-stoplight:
+            id: djogm4kxo93ag
+          description: コンテンツのタイトル
+          maxLength: 100
+          example: Book Title
+        body:
+          type: string
+          x-stoplight:
+            id: dakrjnx4emd7r
+          description: コンテンツのボディ
+          maxLength: 2000
+          example: Book Body
+        createdAt:
+          type: string
+          format: date
+          description: The date that the content was created.
+          x-stoplight:
+            id: qet6outkt29d5
+        updatedAt:
+          type: string
+          format: date
+          x-stoplight:
+            id: afyvsy57w429s
+          description: The date that the content was updated11
+    PostContentRequest:
+      title: PostContentRequest
+      type: object
+      x-stoplight:
+        id: co2wm6xdqyxg9
+      x-internal: true
+      properties:
+        title:
+          type: string
+          x-stoplight:
+            id: iid6fzq7aeqs6
+          example: Hello Title
+        body:
+          type: string
+          x-stoplight:
+            id: ir6w0w56pgulz
+          example: Hello Body
+    UpdateContentRequest:
+      title: UpdateContentRequest
+      type: object
+      x-stoplight:
+        id: figu3kp6xbdw3
+      x-examples:
+        Example 1:
+          title: Update Title
+          body: Update Body
+      x-internal: true
+      properties:
+        title:
+          type: string
+          x-stoplight:
+            id: gku306wepue7o
+          example: Update Title
+        body:
+          type: string
+          x-stoplight:
+            id: umaunx6atkv6f
+          example: Update Body
+  securitySchemes: {}
+x-internal: true
+tags:
+  - name: Content
