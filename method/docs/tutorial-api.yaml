@@ -10,7 +10,7 @@ servers:
 paths:
   /contents:
     get:
-      summary: Get Contents
+      summary: コンテンツ一覧の取得
       operationId: get-Contents
       tags:
         - Content
@@ -27,11 +27,12 @@ paths:
       x-stoplight:
         id: jaxhnr1gv9qxs
       x-internal: true
-      description: コンテンツ一覧の取得
       parameters: []
     post:
-      summary: Create New Content
+      summary: コンテンツの作成
       operationId: post-content
+      tags:
+        - Content
       responses:
         '201':
           description: Content Created
@@ -52,7 +53,6 @@ paths:
         id: r1wwt8ur8axks
       x-internal: true
       description: Post the necessary fields for the API to create a new content.
-    description: コンテンツの作成
     parameters: []
   '/contents/{id}':
     parameters:
@@ -62,7 +62,7 @@ paths:
         in: path
         required: true
     get:
-      summary: Get Content Info by Content ID
+      summary: コンテンツの取得
       operationId: get-contents-contentsId
       tags:
         - Content
@@ -85,9 +85,8 @@ paths:
       x-stoplight:
         id: nnavtavn82qnu
       x-internal: true
-      description: コンテンツの取得
     put:
-      summary: Update a Content
+      summary: コンテンツの更新
       operationId: put-contents-contentId
       tags:
         - Content
@@ -106,9 +105,8 @@ paths:
       x-stoplight:
         id: gpzpzxftidc24
       x-internal: true
-      description: コンテンツの更新
     delete:
-      summary: Delete a Content by Content ID
+      summary: コンテンツの削除
       operationId: delete-contents-contentId
       tags:
         - Content
@@ -117,7 +115,6 @@ paths:
           description: No Content
       x-stoplight:
         id: djs9gmof7n97r
-      description: コンテンツの削除
       x-internal: true
 components:
   schemas:
