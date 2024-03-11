@@ -1,7 +1,7 @@
 import express from "express";
 
+import { Content } from "./entities/Content";
 import { AppDataSource } from "../data-source";
-import { Content } from "../entities/Content";
 
 const app: express.Express = express();
 
@@ -16,17 +16,23 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 AppDataSource.initialize()
-  .then(() => {
+  .then(async () => {
     console.log("DB connected");
+    const content = new Content("test title", "test body");
+    await AppDataSource.manager.save(content);
+    console.log(`コンテンツを保存しました。コンテンツidは${content.id}です。`);
+
+    app.listen(3000, () => {
+      console.log("App is running on port 3000");
+    });
   })
   .catch((error: Error) => {
     console.error(error);
   });
 
-app.get("/", (req: express.Request, res: express.Response) => {
-  res.send("コンテンツの一覧を表示します。");
+app.get("/", async (req: express.Request, res: express.Response) => {
+  const savedContentOfAll = await AppDataSource.manager.find(Content);
+  res.json(savedContentOfAll);
 });
 
-app.listen(3000, () => {
-  console.log("App is running on port 3000");
-});
+
