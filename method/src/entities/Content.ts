@@ -1,14 +1,20 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
 
 @Entity()
 export class Content {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({length: 100, nullable: true})
+  @Column({ length: 100, nullable: true })
   title: string;
 
-  @Column({length: 2000, nullable: true})
+  @Column({ length: 2000, nullable: true })
   body: string;
 
   @CreateDateColumn()
