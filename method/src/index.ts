@@ -4,7 +4,7 @@ import { Content } from "./entities/Content";
 import { AppDataSource } from "../data-source";
 
 const app: express.Express = express();
-// 名前で判断しやすい。Entity Managerだと、何のEntityを操作しているのかがわかりにくい。
+// 名前で判断しやすい。Entity Managerだと、引数を見るまで何のEntityを操作しているのかがわかりにくい。
 const contentRepository = AppDataSource.getRepository(Content);
 
 
@@ -25,9 +25,13 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/contents", async (req: express.Request, res: express.Response) => {
   try {
     const contentOfAll = await contentRepository.find();
+    console.log(contentOfAll);
+    if(contentOfAll == null) {
+      res.status(404).send("コンテンツがありません");
+      return;
+    }
     res.json(contentOfAll);
   } catch (err) {
-    console.error(err);
     res.status(500).send("Internal Server Error");
   }
 });
@@ -48,6 +52,10 @@ app.get("/contents/:id", async (req: express.Request, res: express.Response) => 
     const content = await contentRepository.findOne({
       where: {id: Number(req.params.id)},
     });
+    if(content == null) {
+      res.status(404).send("コンテンツがありません");
+      return;
+    }
     res.json(content);
   } catch (err) {
     console.error(err);
@@ -60,7 +68,10 @@ app.put("/contents/:id", async (req: express.Request, res: express.Response) => 
     const content = await contentRepository.findOne({
       where: {id: Number(req.params.id)},
     });
-    if (content) {
+    if (content == null) {
+      res.status(404).send("コンテンツがありません");
+      return;
+    } else {
       content.title = req.body.title;
       content.body = req.body.body;
       await contentRepository.save(content);
@@ -74,7 +85,7 @@ app.put("/contents/:id", async (req: express.Request, res: express.Response) => 
 
 app.delete("/contents/:id", async (req: express.Request, res: express.Response) => {
   try {
-    const content = await contentRepository.findOne({
+      const content = await contentRepository.findOne({
       where: {id: Number(req.params.id)},
     });
     if (content) {
@@ -95,8 +106,8 @@ AppDataSource.initialize()
       console.log("App is running on port 3000");
     });
   })
-  .catch((error: Error) => {
-    console.error(error);
+  .catch((err: Error) => {
+    console.error(err);
   });
 
  
