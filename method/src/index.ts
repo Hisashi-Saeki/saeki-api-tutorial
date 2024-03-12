@@ -4,6 +4,9 @@ import { Content } from "./entities/Content";
 import { AppDataSource } from "../data-source";
 
 const app: express.Express = express();
+// 名前で判断しやすい。Entity Managerだと、何のEntityを操作しているのかがわかりにくい。
+const contentRepository = AppDataSource.getRepository(Content);
+
 
 app.use(
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -19,11 +22,52 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get("/contents", async (req: express.Request, res: express.Response) => {
+  const contentOfAll = await contentRepository.find();
+  res.json(contentOfAll);
+});
+
+app.post("/contents", async (req: express.Request, res: express.Response) => {
+  const content = new Content(req.body.title, req.body.body);
+  await contentRepository.save(content);
+  res.json(content);
+});
+
+app.get("/contents/:id", async (req: express.Request, res: express.Response) => {
+  const content = await contentRepository.findOne({
+    where: {id: Number(req.params.id)},
+  });
+  res.json(content);
+})
+
+app.put("/contents/:id", async (req: express.Request, res: express.Response) => {
+  const content = await contentRepository.findOne({
+    where: {id: Number(req.params.id)},
+  });
+  if (content) {
+    content.title = req.body.title;
+    content.body = req.body.body;
+    await contentRepository.save(content);
+  }
+  res.json(content);
+});
+
+app.delete("/contents/:id", async (req: express.Request, res: express.Response) => {
+  const content = await contentRepository.findOne({
+    where: {id: Number(req.params.id)},
+  });
+  if (content) {
+    await contentRepository.remove(content);
+  }
+  res.json(content);
+});
+
+
 AppDataSource.initialize()
   .then(async () => {
     console.log("DB connected");
     const content = new Content("test title", "test body");
-    await AppDataSource.manager.save(content);
+    await contentRepository.save(content);
     console.log(`コンテンツを保存しました。コンテンツidは${content.id}です。`);
 
     app.listen(3000, () => {
@@ -34,7 +78,3 @@ AppDataSource.initialize()
     console.error(error);
   });
 
-app.get("/", async (req: express.Request, res: express.Response) => {
-  const savedContentOfAll = await AppDataSource.manager.find(Content);
-  res.json(savedContentOfAll);
-});
