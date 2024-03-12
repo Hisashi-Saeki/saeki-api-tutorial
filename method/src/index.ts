@@ -25,7 +25,6 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/contents", async (req: express.Request, res: express.Response) => {
   try {
     const contentOfAll = await contentRepository.find();
-    console.log(contentOfAll);
     if(contentOfAll == null) {
       res.status(404).send("コンテンツがありません");
       return;
