@@ -66,9 +66,6 @@ app.delete("/contents/:id", async (req: express.Request, res: express.Response) 
 AppDataSource.initialize()
   .then(async () => {
     console.log("DB connected");
-    const content = new Content("test title", "test body");
-    await contentRepository.save(content);
-    console.log(`コンテンツを保存しました。コンテンツidは${content.id}です。`);
 
     app.listen(3000, () => {
       console.log("App is running on port 3000");
