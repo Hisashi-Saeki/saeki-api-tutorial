@@ -23,45 +23,69 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/contents", async (req: express.Request, res: express.Response) => {
-  const contentOfAll = await contentRepository.find();
-  res.json(contentOfAll);
+  try {
+    const contentOfAll = await contentRepository.find();
+    res.json(contentOfAll);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 app.post("/contents", async (req: express.Request, res: express.Response) => {
-  const content = new Content(req.body.title, req.body.body);
-  await contentRepository.save(content);
-  res.json(content);
+  try {
+    const content = new Content(req.body.title, req.body.body);
+    await contentRepository.save(content);
+    res.json(content);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 app.get("/contents/:id", async (req: express.Request, res: express.Response) => {
-  const content = await contentRepository.findOne({
-    where: {id: Number(req.params.id)},
-  });
-  res.json(content);
+  try {
+    const content = await contentRepository.findOne({
+      where: {id: Number(req.params.id)},
+    });
+    res.json(content);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
 })
 
 app.put("/contents/:id", async (req: express.Request, res: express.Response) => {
-  const content = await contentRepository.findOne({
-    where: {id: Number(req.params.id)},
-  });
-  if (content) {
-    content.title = req.body.title;
-    content.body = req.body.body;
-    await contentRepository.save(content);
+  try {
+    const content = await contentRepository.findOne({
+      where: {id: Number(req.params.id)},
+    });
+    if (content) {
+      content.title = req.body.title;
+      content.body = req.body.body;
+      await contentRepository.save(content);
+    }
+    res.json(content);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
   }
-  res.json(content);
 });
 
 app.delete("/contents/:id", async (req: express.Request, res: express.Response) => {
-  const content = await contentRepository.findOne({
-    where: {id: Number(req.params.id)},
-  });
-  if (content) {
-    await contentRepository.remove(content);
+  try {
+    const content = await contentRepository.findOne({
+      where: {id: Number(req.params.id)},
+    });
+    if (content) {
+      await contentRepository.remove(content);
+    }
+    res.json(content);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
   }
-  res.json(content);
 });
-
 
 AppDataSource.initialize()
   .then(async () => {
@@ -75,3 +99,4 @@ AppDataSource.initialize()
     console.error(error);
   });
 
+ 
