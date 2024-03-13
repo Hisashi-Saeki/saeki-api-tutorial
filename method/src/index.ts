@@ -92,7 +92,7 @@ app.delete(
         res.status(404).send("コンテンツがありません");
         return;
       }
-      res.status(204).send("削除しました。");
+      res.status(204).send();
     } catch (err) {
       console.error(err);
       res.status(500).send("Internal Server Error");

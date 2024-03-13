@@ -43,8 +43,5 @@ export const deleteContent = async (id: string) => {
   if (content == null) {
     return null;
   }
-  /**
-   * # TODO: 削除時にnullが返るのを修正
-   */
-  await contentRepository.remove(content); 
+  return await contentRepository.remove(content); 
 }  
