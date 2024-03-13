@@ -19,6 +19,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// ルーティング内の処理をハンドラに移動した方が見やすいと思った
 app.get("/contents", async (req: express.Request, res: express.Response) => {
   try {
     const contents = await contentHandler.getContents();
