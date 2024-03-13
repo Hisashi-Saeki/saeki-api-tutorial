@@ -34,10 +34,7 @@ app.get("/contents", async (req: express.Request, res: express.Response) => {
 
 app.post("/contents", async (req: express.Request, res: express.Response) => {
   try {
-    const content = await contentHandler.postContents(
-      req.body.title,
-      req.body.body,
-    );
+    const content = await contentHandler.postContents(req.body.title, req.body.body,);
     res.status(201).json(content);
   } catch (err) {
     console.error(err);
@@ -66,11 +63,7 @@ app.put(
   "/contents/:id",
   async (req: express.Request, res: express.Response) => {
     try {
-      const content = await contentHandler.putContent(
-        req.params.id,
-        req.body.title,
-        req.body.body,
-      );
+      const content = await contentHandler.putContent(req.params.id, req.body.title, req.body.body,);
       if (content == null) {
         res.status(404).send("コンテンツがありません");
         return;
