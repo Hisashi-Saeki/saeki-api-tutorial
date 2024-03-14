@@ -5,16 +5,11 @@ import * as contentHandler from "../handlers/contents";
 
 const app: express.Express = express();
 
-app.use(
-  (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header(
-      "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept",
-    );
-    next();
-  },
-);
+app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -35,7 +30,7 @@ app.get("/contents", async (req: express.Request, res: express.Response) => {
 
 app.post("/contents", async (req: express.Request, res: express.Response) => {
   try {
-    const content = await contentHandler.postContents(req.body.title, req.body.body,);
+    const content = await contentHandler.postContents(req.body.title, req.body.body);
     res.status(201).json(content);
   } catch (err) {
     console.error(err);
@@ -43,57 +38,48 @@ app.post("/contents", async (req: express.Request, res: express.Response) => {
   }
 });
 
-app.get(
-  "/contents/:id",
-  async (req: express.Request, res: express.Response) => {
-    try {
-      const content = await contentHandler.getContent(req.params.id);
-      if (content == null) {
-        res.status(404).send("コンテンツがありません");
-        return;
-      }
-      res.status(200).json(content);
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Internal Server Error");
+app.get("/contents/:id", async (req: express.Request, res: express.Response) => {
+  try {
+    const content = await contentHandler.getContent(req.params.id);
+    if (content == null) {
+      res.status(404).send("コンテンツがありません");
+      return;
     }
-  },
-);
+    res.status(200).json(content);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
-app.put(
-  "/contents/:id",
-  async (req: express.Request, res: express.Response) => {
-    try {
-      const content = await contentHandler.putContent(req.params.id, req.body.title, req.body.body,);
-      if (content == null) {
-        res.status(404).send("コンテンツがありません");
-        return;
-      }
-      res.status(200).json(content);
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Internal Server Error");
+app.put("/contents/:id", async (req: express.Request, res: express.Response) => {
+  try {
+    const content = await contentHandler.putContent(req.params.id, req.body.title, req.body.body);
+    if (content == null) {
+      res.status(404).send("コンテンツがありません");
+      return;
     }
-  },
-);
+    res.status(200).json(content);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
-app.delete(
-  "/contents/:id",
-  async (req: express.Request, res: express.Response) => {
-    try {
-      const content = await contentHandler.deleteContent(req.params.id);
-      if (content == null) {
-        res.status(404).send("コンテンツがありません");
-        return;
-      }
-      console.log(content);
-      res.status(204).send();
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Internal Server Error");
+app.delete("/contents/:id", async (req: express.Request, res: express.Response) => {
+  try {
+    const content = await contentHandler.deleteContent(req.params.id);
+    if (content == null) {
+      res.status(404).send("コンテンツがありません");
+      return;
     }
-  },
-);
+    console.log(content);
+    res.status(204).send();
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 AppDataSource.initialize()
   .then(async () => {
