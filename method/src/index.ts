@@ -86,6 +86,7 @@ app.delete(
         res.status(404).send("コンテンツがありません");
         return;
       }
+      console.log(content);
       res.status(204).send();
     } catch (err) {
       console.error(err);

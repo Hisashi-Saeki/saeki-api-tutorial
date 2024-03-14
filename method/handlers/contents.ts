@@ -11,7 +11,7 @@ export const getContents = async () => {
 }
 
 export const postContents = async (title: string, body: string) => {
-  const content = new Content(title, body);
+  const content = contentRepository.create({title, body});
   await contentRepository.save(content);
   return content;
 }
@@ -43,5 +43,5 @@ export const deleteContent = async (id: string) => {
   if (content == null) {
     return null;
   }
-  return await contentRepository.remove(content); 
+  return await contentRepository.remove(content); /*nullを返却しないためにreturn*/
 }  
