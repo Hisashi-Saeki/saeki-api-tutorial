@@ -12,7 +12,6 @@ const mockSave = jest.spyOn(contentRepository, 'save');
 const mockRemove = jest.spyOn(contentRepository, 'remove');
 
 beforeEach(() => {
-  mockCreate.mockClear();
   jest.clearAllMocks();
 });
 
