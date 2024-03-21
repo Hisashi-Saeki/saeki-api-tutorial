@@ -16,6 +16,6 @@ app.get("/", (req: express.Request, res: express.Response) => {
   res.send("Hello World!");
 });
 
-app.listen(3000, () => {
-  console.log("App is running on port 3000");
+app.listen(80, () => {
+  console.log("App is running on port 80");
 });
