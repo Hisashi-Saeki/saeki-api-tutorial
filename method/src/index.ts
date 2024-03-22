@@ -16,16 +16,12 @@ app.use(express.urlencoded({ extended: true }));
 
 // ルーティング内の処理をハンドラに移動した方が見やすいと思った
 app.get("/contents", async (req: express.Request, res: express.Response) => {
-  try {
-    const contents = await contentHandler.getContents();
-    if (contents == null) {
-      res.status(404).send("コンテンツがありません");
-      return;
-    }
-    res.status(200).json(contents);
-  } catch (err) {
-    res.status(500).send("Internal Server Error");
+  const contents = await contentHandler.getContents();
+  if (contents == null) {
+    res.status(404).send("コンテンツがありません");
+    return;
   }
+  res.status(200).json(contents);
 });
 
 app.post("/contents", async (req: express.Request, res: express.Response) => {
@@ -39,17 +35,12 @@ app.post("/contents", async (req: express.Request, res: express.Response) => {
 });
 
 app.get("/contents/:id", async (req: express.Request, res: express.Response) => {
-  try {
-    const content = await contentHandler.getContent(req.params.id);
-    if (content == null) {
-      res.status(404).send("コンテンツがありません");
-      return;
-    }
-    res.status(200).json(content);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Internal Server Error");
+  const content = await contentHandler.getContent(req.params.id);
+  if (content == null) {
+    res.status(404).send("コンテンツがありません");
+    return;
   }
+  res.status(200).json(content);
 });
 
 app.put("/contents/:id", async (req: express.Request, res: express.Response) => {
