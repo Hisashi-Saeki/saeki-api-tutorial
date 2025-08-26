@@ -2,3 +2,4 @@ hello-world/node_modules/
 method/node_modules/
 volumes/
 method/.env
+.cursor
