@@ -13,6 +13,7 @@ app.use(
 );
 
 app.get("/", (req: express.Request, res: express.Response) => {
+  console.log("test");
   res.send("Hello World!");
 });
 
