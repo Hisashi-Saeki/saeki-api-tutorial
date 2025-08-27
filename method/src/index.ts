@@ -71,6 +71,23 @@ app.delete("/contents/:id", async (req: express.Request, res: express.Response) 
   }
 });
 
+app.post("/contents/bulk-delete", async (req: express.Request, res: express.Response) => {
+  try {
+    const { ids } = req.body;
+    
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      res.status(400).json({ error: "削除対象のIDが指定されていません" });
+      return;
+    }
+    
+    const result = await contentHandler.deleteMultipleContents(ids);
+    res.status(200).json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 AppDataSource.initialize()
   .then(async () => {
     console.log("DB connected");
