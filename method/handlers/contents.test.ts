@@ -1,4 +1,4 @@
-import { getContents, postContents, getContent, putContent, deleteContent } from './contents';
+import { getContents, postContents, getContent, putContent, deleteContent, deleteMultipleContents } from './contents';
 import { AppDataSource } from '../data-source';
 import { Content } from '../src/entities/Content';
 
@@ -9,7 +9,7 @@ contentRepository.create = mockCreate;
 const mockFind = jest.spyOn(contentRepository, 'find');
 const mockFindOne = jest.spyOn(contentRepository, 'findOne');
 const mockSave = jest.spyOn(contentRepository, 'save');
-const mockRemove = jest.spyOn(contentRepository, 'remove');
+const mockRemove = jest.spyOn(contentRepository, 'remove') as jest.MockedFunction<typeof contentRepository.remove>;
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -184,4 +184,53 @@ test('deleteContent 失敗時', async () => {
 
   const reqMock = { id: '1' };
   await expect(deleteContent(reqMock.id)).rejects.toThrow('something error');
+})
+
+test('deleteMultipleContents', async () => {
+  const mockContents = [
+    { id: 1, title: 'title1', body: 'body1' },
+    { id: 2, title: 'title2', body: 'body2' }
+  ];
+  mockFind.mockResolvedValue(mockContents);
+  (mockRemove as jest.Mock).mockResolvedValue(mockContents);
+
+  const reqMock = { ids: ['1', '2'] };
+  const result = await deleteMultipleContents(reqMock.ids);
+
+  expect(result.deletedCount).toStrictEqual(2);
+  expect(result.deletedIds).toStrictEqual([1, 2]);
+  expect(result.message).toStrictEqual('2件のコンテンツを削除しました');
+
+  expect(mockFind).toHaveBeenCalledTimes(1);
+  const [findArg] = mockFind.mock.calls[0];
+  expect(findArg?.where).toEqual([{ id: 1 }, { id: 2 }]);
+
+  expect(mockRemove).toHaveBeenCalledTimes(1);
+  const [removeArg] = mockRemove.mock.calls[0];
+  expect(removeArg).toEqual(mockContents);
+})
+
+test('deleteMultipleContents 削除対象なし', async () => {
+  mockFind.mockResolvedValue([]);
+
+  const reqMock = { ids: ['999', '1000'] };
+  const result = await deleteMultipleContents(reqMock.ids);
+
+  expect(result.deletedCount).toStrictEqual(0);
+  expect(result.message).toStrictEqual('削除対象のコンテンツが見つかりませんでした');
+
+  expect(mockFind).toHaveBeenCalledTimes(1);
+  const [findArg] = mockFind.mock.calls[0];
+  expect(findArg?.where).toEqual([{ id: 999 }, { id: 1000 }]);
+
+  expect(mockRemove).not.toHaveBeenCalled();
+})
+
+test('deleteMultipleContents 失敗時', async () => {
+  expect.assertions(1);
+
+  mockFind.mockRejectedValue(new Error('something error'));
+
+  const reqMock = { ids: ['1', '2'] };
+  await expect(deleteMultipleContents(reqMock.ids)).rejects.toThrow('something error');
 })
