@@ -52,6 +52,29 @@ paths:
       x-internal: true
       description: Post the necessary fields for the API to create a new content.
     parameters: []
+  /contents/bulk-delete:
+    post:
+      summary: 複数コンテンツの一括削除
+      operationId: delete-multiple-contents
+      tags:
+        - Content
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkDeleteResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkDeleteRequest'
+      x-stoplight:
+        id: bulk-delete-contents
+      x-internal: true
+      description: 指定されたIDの複数コンテンツを一括削除します。
+    parameters: []
   '/contents/{id}':
     parameters:
       - schema:
@@ -180,8 +203,6 @@ components:
     UpdateContentRequest:
       title: UpdateContentRequest
       type: object
-      x-stoplight:
-        id: figu3kp6xbdw3
       x-examples:
         Example 1:
           title: Update Title
@@ -198,6 +219,38 @@ components:
           x-stoplight:
             id: umaunx6atkv6f
           example: Update Body
+    BulkDeleteRequest:
+      title: BulkDeleteRequest
+      type: object
+      x-internal: true
+      required:
+        - ids
+      properties:
+        ids:
+          type: array
+          items:
+            type: string
+          description: 削除対象のコンテンツIDの配列
+          example: ["1", "2", "3"]
+    BulkDeleteResponse:
+      title: BulkDeleteResponse
+      type: object
+      x-internal: true
+      properties:
+        deletedCount:
+          type: integer
+          description: 削除されたコンテンツの件数
+          example: 2
+        deletedIds:
+          type: array
+          items:
+            type: integer
+          description: 削除されたコンテンツのIDの配列
+          example: [1, 2]
+        message:
+          type: string
+          description: 削除結果のメッセージ
+          example: "2件のコンテンツを削除しました"
   securitySchemes: {}
 x-internal: true
 tags:
