@@ -45,3 +45,26 @@ export const deleteContent = async (id: string) => {
   }
   return await contentRepository.remove(content); /*nullを返却しないためにreturn*/
 }  
+
+export const deleteMultipleContents = async (ids: string[]) => {
+  // IDの配列を数値に変換
+  const numericIds = ids.map(id => Number(id));
+  
+  // 指定されたIDのコンテンツを一括取得
+  const contents = await contentRepository.find({
+    where: numericIds.map(id => ({ id }))
+  });
+  
+  if (contents.length === 0) {
+    return { deletedCount: 0, message: "削除対象のコンテンツが見つかりませんでした" };
+  }
+  
+  // 一括削除を実行
+  const deletedContents = await contentRepository.remove(contents);
+  
+  return {
+    deletedCount: deletedContents.length,
+    deletedIds: deletedContents.map((content: Content) => content.id),
+    message: `${deletedContents.length}件のコンテンツを削除しました`
+  };
+}  
